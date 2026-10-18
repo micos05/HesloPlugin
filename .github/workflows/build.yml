@@ -6,11 +6,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Scarica SDK X-Plane
-        shell: bash
+      - name: Estrai SDK X-Plane
+        shell: pwsh
         run: |
-          curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" -o XPSDK.zip https://developer.x-plane.com/wp-content/uploads/2023/11/XPSDK401.zip
-          tar -xf XPSDK.zip
+          Expand-Archive -Path XPSDK401.zip -DestinationPath XPSDK401 -Force
           
       - name: Configura e Compila
         shell: bash
