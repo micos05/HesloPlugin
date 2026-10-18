@@ -2,11 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 project(HesloPlugin)
 
 set(CMAKE_CXX_STANDARD 17)
+# La correzione è nella riga qui sotto (-DIBM=1)
 add_definitions(-DIBM=1 -DXPLM200 -DXPLM210 -DXPLM300 -DXPLM301)
-
-if(NOT XPLANE_SDK_PATH)
-    set(XPLANE_SDK_PATH "C:/Librerie/XPlaneSDK")
-endif()
 
 include_directories(${XPLANE_SDK_PATH}/CHeaders/XPLM)
 
