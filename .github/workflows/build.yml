@@ -1,0 +1,23 @@
+name: Build Heslo Plugin
+on: [push]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Scarica SDK X-Plane
+        run: |
+          curl -o XPSDK.zip https://developer.x-plane.com/wp-content/uploads/2023/11/XPSDK401.zip
+          tar -xf XPSDK.zip
+          
+      - name: Configura e Compila
+        run: |
+          cmake -B build -DXPLANE_SDK_PATH="${{ github.workspace }}/XPSDK401"
+          cmake --build build --config Release
+          
+      - name: Salva il Plugin Finito
+        uses: actions/upload-artifact@v4
+        with:
+          name: Plugin_Finito
+          path: build/Release/win.xpl
