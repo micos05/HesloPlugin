@@ -7,11 +7,13 @@ jobs:
       - uses: actions/checkout@v4
       
       - name: Scarica SDK X-Plane
+        shell: bash
         run: |
-          curl -o XPSDK.zip https://developer.x-plane.com/wp-content/uploads/2023/11/XPSDK401.zip
+          curl -L -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" -o XPSDK.zip https://developer.x-plane.com/wp-content/uploads/2023/11/XPSDK401.zip
           tar -xf XPSDK.zip
           
       - name: Configura e Compila
+        shell: bash
         run: |
           cmake -B build -DXPLANE_SDK_PATH="${{ github.workspace }}/XPSDK401"
           cmake --build build --config Release
