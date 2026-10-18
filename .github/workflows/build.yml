@@ -14,7 +14,7 @@ jobs:
       - name: Configura e Compila
         shell: bash
         run: |
-          cmake -B build -DXPLANE_SDK_PATH="${{ github.workspace }}/XPSDK401"
+          cmake -B build -DXPLANE_SDK_PATH="${{ github.workspace }}/XPSDK401/SDK"
           cmake --build build --config Release
           
       - name: Salva il Plugin Finito
