@@ -1,25 +1,15 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "XPLMPlugin.h"
-#include "XPLMDisplay.h"
-#include "XPLMGraphics.h"
-#include "XPLMProcessing.h"
 #include "XPLMDataAccess.h"
+#include "XPLMProcessing.h"
 #include <vector>
 #include <cmath>
 #include <cstring>
 
-#if IBM
-#include <windows.h>
-#include <GL/gl.h>
-#elif LIN
-#include <GL/gl.h>
-#elif APL
-#include <OpenGL/gl.h>
-#endif
-
 const int NUM_NODES = 20;
 const float ROPE_LENGTH = 15.0f;
 const float SEGMENT_LENGTH = ROPE_LENGTH / (NUM_NODES - 1);
-const float LOAD_MASS = 800.0f;
+const float LOAD_MASS = 800.0f; // 800kg di carico
 
 struct RopeNode {
     float x, y, z;
@@ -90,30 +80,15 @@ float PhysicsLoopCallback(float inElapsedSinceLastCall, float inElapsedTimeSince
         }
     }
 
+    // Applica dinamicamente la trazione sull'elicottero
     XPLMSetDataf(force_nrml, -LOAD_MASS * 9.81f);
     return -1.0f;
-}
-
-int DrawRopeCallback(XPLMDrawingPhase inPhase, int inIsBefore, void * inRefcon) {
-    if (ropeNodes.empty()) return 1;
-
-    XPLMSetGraphicsState(0, 0, 0, 0, 1, 1, 0);
-    glColor3f(1.0f, 0.5f, 0.0f);
-    glLineWidth(3.0f);
-
-    glBegin(GL_LINE_STRIP);
-    for (const auto& node : ropeNodes) {
-        glVertex3f(node.x, node.y, node.z);
-    }
-    glEnd();
-
-    return 1;
 }
 
 PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
     strncpy(outName, "Realistic HESLO Physics", 255);
     strncpy(outSig, "com.bladebrazzers.heslo", 255);
-    strncpy(outDesc, "Fisica Verlet per funi di carico appeso.", 255);
+    strncpy(outDesc, "Motore fisico Verlet per carichi appesi.", 255);
 
     heli_x = XPLMFindDataRef("sim/flightmodel/position/local_x");
     heli_y = XPLMFindDataRef("sim/flightmodel/position/local_y");
@@ -121,14 +96,11 @@ PLUGIN_API int XPluginStart(char * outName, char * outSig, char * outDesc) {
     force_nrml = XPLMFindDataRef("sim/flightmodel/forces/fnrml_plug_acf");
 
     XPLMRegisterFlightLoopCallback(PhysicsLoopCallback, -1.0f, NULL);
-    XPLMRegisterDrawCallback(DrawRopeCallback, xplm_Phase_Modern3D, 0, NULL);
-
     return 1;
 }
 
 PLUGIN_API void XPluginStop(void) {
     XPLMUnregisterFlightLoopCallback(PhysicsLoopCallback, NULL);
-    XPLMUnregisterDrawCallback(DrawRopeCallback, xplm_Phase_Modern3D, 0, NULL);
 }
 
 PLUGIN_API void XPluginDisable(void) { }
