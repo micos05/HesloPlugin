@@ -8,3 +8,6 @@ include_directories(${XPLANE_SDK_PATH}/CHeaders/XPLM)
 
 add_library(win.xpl SHARED HesloPhysics.cpp)
 set_target_properties(win.xpl PROPERTIES PREFIX "")
+
+# Collega il plugin al motore interno di X-Plane
+target_link_libraries(win.xpl "${XPLANE_SDK_PATH}/Libraries/Win/XPLM_64.lib" opengl32)
