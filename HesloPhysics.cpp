@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "XPLMPlugin.h"
 #include "XPLMDataAccess.h"
 #include "XPLMProcessing.h"
